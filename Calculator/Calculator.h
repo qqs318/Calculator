@@ -14,6 +14,7 @@
 // CCalculatorApp: 
 // 有关此类的实现，请参阅 Calculator.cpp
 //
+// a 
 
 class CCalculatorApp : public CWinApp
 {
