@@ -88,6 +88,8 @@ BEGIN_MESSAGE_MAP(CCalculatorDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_JIAN, &CCalculatorDlg::OnBnClickedButtonJian)
 	ON_BN_CLICKED(IDC_BUTTON_CHENG, &CCalculatorDlg::OnBnClickedButtonCheng)
 	ON_BN_CLICKED(IDC_BUTTON_CHU, &CCalculatorDlg::OnBnClickedButtonChu)
+	ON_BN_CLICKED(IDC_BUTTON_CE, &CCalculatorDlg::OnBnClickedButtonCe)
+	ON_BN_CLICKED(IDC_BUTTON_C, &CCalculatorDlg::OnBnClickedButtonC)
 END_MESSAGE_MAP()
 
 
@@ -125,6 +127,7 @@ BOOL CCalculatorDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 	m_nCurState = ID_CURSTATE_NONE;
 	m_bInputState = TRUE;
+	m_bDengState = FALSE;
 	m_dFirstValue = 0.;
 	m_dSecondValue = 0.;
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -211,6 +214,7 @@ void CCalculatorDlg::CurValueAdded(CString cNum)
 	{
 		GetDlgItem(IDC_STATIC_DIS)->SetWindowText(cCurrentNum + cNum);
 	}
+	//m_bDengState = FALSE;
 }
 
 void CCalculatorDlg::OnBnClickedButton0()
@@ -286,6 +290,12 @@ void CCalculatorDlg::OnBnClickedButtonZ()
 	{
 		GetDlgItem(IDC_STATIC_DIS)->SetWindowText(cCurrentNum.Right(cCurrentNum.GetLength()-1));
 	}
+	if (m_bDengState)
+	{
+		//刚刚按完等号加负号	
+		m_dFirstValue = GetCurValue();
+
+	}
 }
 
 void CCalculatorDlg::OnBnClickedButtonD()
@@ -324,16 +334,18 @@ void CCalculatorDlg::OnBnClickedButtonDel()
 void CCalculatorDlg::OnBnClickedButtonJia()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	GetRes();
 	m_dFirstValue = GetCurValue();
 	m_nCurState = ID_CURSTATE_JIA;
 	m_bInputState = FALSE;
+	m_bDengState = FALSE;
 }
 
-void CCalculatorDlg::SetCurValue(double dCurValue)
+void CCalculatorDlg::SetCurValue(long double dCurValue)
 {
 	CString cValue;
-	cValue.Format("%f", dCurValue);
-	cValue.Trim("0");
+	cValue.Format("%0.15f", dCurValue);
+	cValue.TrimRight("0");
 	CString a = cValue.Right(1);
 	if (cValue.Right(1) == ".")
 	{
@@ -343,22 +355,27 @@ void CCalculatorDlg::SetCurValue(double dCurValue)
 
 }
 
-double CCalculatorDlg::GetCurValue()
+long double CCalculatorDlg::GetCurValue()
 {
 	CString cCurrentNum;
 	GetDlgItem(IDC_STATIC_DIS)->GetWindowText(cCurrentNum);
-// 	if (cCurrentNum.Find(".") != -1)
-// 	{
-// 		cCurrentNum = cCurrentNum.Trim("0");
-// 	}
 	return atof(cCurrentNum);
 }
 
 void CCalculatorDlg::OnBnClickedButtonDeng()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_dSecondValue = GetCurValue();
-	double dRes = 0.;
+	GetRes();
+}
+
+void CCalculatorDlg::GetRes()
+{
+	if (!m_bDengState)
+	{
+		m_dSecondValue = GetCurValue();
+	}
+
+	long double dRes = 0.;
 	BOOL bAble = TRUE;
 	switch (m_nCurState)
 	{
@@ -382,33 +399,66 @@ void CCalculatorDlg::OnBnClickedButtonDeng()
 	{
 		SetCurValue(dRes);
 	}
-	m_nCurState = ID_CURSTATE_NONE;
+	//m_nCurState = ID_CURSTATE_NONE;
+	m_dFirstValue = dRes;
 	m_bInputState = FALSE;
+	m_bDengState = TRUE;
 }
-
 
 void CCalculatorDlg::OnBnClickedButtonJian()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	GetRes();
 	m_dFirstValue = GetCurValue();
 	m_nCurState = ID_CURSTATE_JIAN;
 	m_bInputState = FALSE;
+	m_bDengState = FALSE;
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonCheng()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	GetRes();
 	m_dFirstValue = GetCurValue();
 	m_nCurState = ID_CURSTATE_CHENG;
 	m_bInputState = FALSE;
+	m_bDengState = FALSE;
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonChu()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	GetRes();
 	m_dFirstValue = GetCurValue();
 	m_nCurState = ID_CURSTATE_CHU;
 	m_bInputState = FALSE;
+	m_bDengState = FALSE;
+}
+
+
+void CCalculatorDlg::OnBnClickedButtonCe()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	SetCurValue(0.);
+	if (m_bInputState)
+	{
+		m_dSecondValue = 0.;
+	}
+	else
+	{
+		m_dFirstValue = 0.;
+	}
+	//m_dSecondValue = 0.;
+	//m_bInputState = TRUE;
+}
+
+
+void CCalculatorDlg::OnBnClickedButtonC()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	SetCurValue(0.);
+	m_bInputState = TRUE;
+	m_nCurState = ID_CURSTATE_NONE;
 }

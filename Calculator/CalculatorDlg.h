@@ -36,9 +36,10 @@ public:
 	afx_msg void OnBnClickedButton7();
 //	CString m_cCurrentNum; // 当前显示框的值
 	int  m_nCurState; // 用于标记当前计算状态
+	BOOL m_bDengState;
 	BOOL m_bInputState; // 用于标记当前是否处于输入数值状态，输入数值时，可以del
-	double m_dFirstValue;
-	double m_dSecondValue;
+	long double m_dFirstValue;
+	long double m_dSecondValue;
 //	CStatic m_cDisStatic;
 	afx_msg void OnBnClickedButton8();
 	afx_msg void OnBnClickedButton9();
@@ -55,11 +56,14 @@ public:
 	afx_msg void OnBnClickedButtonJia();
 
 	void CurValueAdded(CString cNum);
-	double GetCurValue();
-	void   SetCurValue(double dCurValue);
+	long double GetCurValue();
+	void   SetCurValue(long double dCurValue);
+	void GetRes();
 	
 	afx_msg void OnBnClickedButtonDeng();
 	afx_msg void OnBnClickedButtonJian();
 	afx_msg void OnBnClickedButtonCheng();
 	afx_msg void OnBnClickedButtonChu();
+	afx_msg void OnBnClickedButtonCe();
+	afx_msg void OnBnClickedButtonC();
 };
