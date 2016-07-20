@@ -51,7 +51,7 @@ public:
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedButton0();
 	afx_msg void OnBnClickedButtonZ();
-	afx_msg void OnBnClickedButtonD();
+	afx_msg void OnBnClickedButtonDot();
 	afx_msg void OnBnClickedButtonDel();
 	afx_msg void OnBnClickedButtonJia();
 
